@@ -1,0 +1,18 @@
+{
+  "name": "apollo",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "@graphql-tools/utils": "^7.10.0",
+    "apollo-server": "^3.0.0",
+    "graphql": "link:../../node_modules/graphql",
+    "jose-node-esm-runtime": "^3.14.0",
+    "nodemon": "^2.0.12"
+  },
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "name": "@apollosolutions/graphql-operation-redactor",
+  "version": "0.1.0",
+  "main": "src/index.js",
+  "license": "MIT",
+  "type": "module",
+  "files": [
+    "src"
+  ],
+  "dependencies": {
+    "graphql": "^15.5.1"
+  },
+  "devDependencies": {
+    "@types/jest": "^26.0.24",
+    "@types/node": "^16.3.1",
+    "@types/remarkable": "^2.0.3",
+    "gray-matter": "^4.0.3",
+    "jest": "^27.0.6",
+    "remarkable": "^2.0.1",
+    "typescript": "^4.3.5",
+    "walk-sync": "^3.0.0"
+  },
+  "scripts": {
+    "test": "node --experimental-vm-modules $(yarn bin)/jest test/",
+    "prepublishOnly": "tsc -p tsconfig.build.json"
+  }
+}
