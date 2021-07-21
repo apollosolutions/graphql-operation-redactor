@@ -1,5 +1,7 @@
 import {
+  getNamedType,
   GraphQLError,
+  isIntrospectionType,
   isNonNullType,
   TypeInfo,
   visit,
@@ -33,7 +35,9 @@ export function redact(operation, schema, context, predicate) {
   const fragments = new FragmentTracker();
 
   /** @type {GraphQLError[]} */
-  const errors = [];
+  const hardErrors = [];
+  /** @type {GraphQLError[]} */
+  const softErrors = [];
 
   // When fragments occur after the operation, we need to revisit the whole
   // document to remove fragment spreads for empty fragments (which may cause
@@ -54,6 +58,12 @@ export function redact(operation, schema, context, predicate) {
             assert(parentType);
 
             const field = typeInfo.getFieldDef();
+            const fieldType = getNamedType(field.type);
+
+            if (isIntrospectionType(fieldType)) {
+              return undefined;
+            }
+
             const coordinate = `${parentType.name}.${field.name}`;
 
             const result = predicate({
@@ -76,11 +86,11 @@ export function redact(operation, schema, context, predicate) {
               variables.markRemoved(variableNames);
 
               if (result.error) {
-                errors.push(result.error);
+                softErrors.push(result.error);
               }
 
               if (isNonNullType(field.type)) {
-                errors.push(
+                hardErrors.push(
                   makeNonNullFieldError({
                     node,
                     coordinate,
@@ -111,7 +121,7 @@ export function redact(operation, schema, context, predicate) {
               ];
 
               if (isNonNullType(field.type)) {
-                errors.push(
+                hardErrors.push(
                   makeNonNullFieldError({
                     node,
                     coordinate,
@@ -148,7 +158,7 @@ export function redact(operation, schema, context, predicate) {
             currentOperation = null;
 
             if (node.selectionSet.selections.length === 0) {
-              errors.push(
+              hardErrors.push(
                 makeEmptyOperationError({ node, document: operation })
               );
             }
@@ -207,10 +217,10 @@ export function redact(operation, schema, context, predicate) {
 
   const allMasks = fragments.expandMasks(masks);
 
-  if (errors.length) {
+  if (hardErrors.length) {
     return {
       ok: false,
-      errors,
+      errors: hardErrors,
       masks: allMasks,
     };
   }
@@ -219,6 +229,7 @@ export function redact(operation, schema, context, predicate) {
     ok: true,
     operation: newOperation,
     masks: allMasks,
+    errors: softErrors,
   };
 }
 

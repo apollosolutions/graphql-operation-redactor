@@ -35,6 +35,7 @@ export type RedactResult = RedactResultOk | RedactResultErr;
 export interface RedactResultOk {
   ok: true;
   operation: DocumentNode;
+  errors: GraphQLError[];
   masks: string[][];
 }
 

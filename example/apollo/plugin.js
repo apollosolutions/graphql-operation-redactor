@@ -15,9 +15,12 @@ export function redactionPlugin(predicate) {
           if (result.ok) {
             // @ts-ignore - readonly!
             ctx.document = result.operation;
-            redactionStorage.set(context, { masks: result.masks });
+            redactionStorage.set(context, {
+              masks: result.masks,
+              errors: result.errors,
+            });
           } else {
-            redactionStorage.set(context, result);
+            throw result.errors[0];
           }
         },
         async willSendResponse(ctx) {
