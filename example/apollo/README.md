@@ -34,5 +34,5 @@ curl http://localhost:4000/ \
 
 ```json
 {"data":{"customer":{"id":"1","name":"Morty Smith","emailAddress":"morty@example.com"}}}
-{"data":{"customer":{"id":"1","name":"Morty Smith","emailAddress":null}}}
+{"errors":[{"message":"Access denied to Customer.emailAddress","extensions":{"code":"ACCESS_DENIED"}}],"data":{"customer":{"id":"1","name":"Morty Smith","emailAddress":null}}}
 ```
