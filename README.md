@@ -57,4 +57,4 @@ const enriched = enrich(response, masks);
 
 ## Examples
 
-- [Apollo Server](./examples/apollo)
+- [Apollo Server](https://github.com/apollosolutions/graphql-operation-redactor/tree/main/example/apollo)
